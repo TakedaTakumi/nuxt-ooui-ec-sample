@@ -1,0 +1,55 @@
+{
+  "name": "nuxt-ooui-ec-sample",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/nuxt-ooui-ec-sample",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "remoteUser": "node",
+  // compose の command(pnpm install && pnpm dev)を上書きして
+  // コンテナは待機状態にし、VSCode のターミナルで pnpm dev を手動起動する流れにする
+  // (compose 直接利用時は自動で dev サーバーが起動する)
+  "overrideCommand": true,
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-azuretools.vscode-docker",
+        "oderwat.indent-rainbow",
+        "streetsidesoftware.code-spell-checker",
+        "christian-kohler.path-intellisense",
+        "shardulm94.trailing-spaces",
+        "wraith13.background-phi-colors",
+        "mhutchie.git-graph",
+        "GitHub.vscode-pull-request-github",
+        "eamodio.gitlens",
+        "GitHub.copilot",
+        "github.copilot-chat",
+        "heaths.vscode-guid",
+        "ryanluker.vscode-coverage-gutters",
+        "github.vscode-github-actions",
+        "kisstkondoros.vscode-codemetrics",
+        "vitest.explorer",
+        "Vue.volar",               // Vue 公式言語サポート(SFC の型・補完)
+        "dbaeumer.vscode-eslint",  // ESLint(lint + format を一本化)
+        "anthropic.claude-code"
+      ],
+      "settings": {
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+        "files.autoSave": "afterDelay",
+        // 整形は ESLint(Stylistic)の auto-fix に一本化する。
+        // formatOnSave + 別 formatter の併用は二重整形・競合の温床になるため、
+        // 保存時アクションは source.fixAll.eslint のみとする。
+        "editor.formatOnSave": false,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        "eslint.format.enable": true,
+        "claudeCode.allowDangerouslySkipPermissions": true,
+        "accessibility.signals.terminalBell": { "sound": "on" }
+      }
+    }
+  }
+}

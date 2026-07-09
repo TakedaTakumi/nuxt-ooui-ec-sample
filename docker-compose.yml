@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      args:
+        APP_USER: node       # コンテナ内のユーザー名(Dockerfile に引数で渡す)
+    working_dir: /nuxt-ooui-ec-sample
+    # 起動時に依存関係を同期してから dev サーバー起動
+    # pnpm install は差分検知するので、node_modules が同期済みなら即時終了する
+    command: sh -c "pnpm install && pnpm dev"
+    ports:
+      - "3000:3000"          # Nuxt dev サーバーの既定ポート
+    volumes:
+      # ソース全体を bind(ホスト編集を即反映)
+      - .:/nuxt-ooui-ec-sample
+      # node_modules はコンテナ内に隔離(ホストを汚さない、パフォーマンス)
+      - app-node-modules:/nuxt-ooui-ec-sample/node_modules
+      # pnpm のグローバルストア(キャッシュ)
+      - app-pnpm-store:/home/node/.local/share/pnpm/store
+      # Claude の設定・認証・履歴はホストと共有
+      # $HOME が未定義だとマウント先が不定になるため、明示的にエラーにする
+      - ${HOME:?HOME環境変数が未定義です。ホストの$HOMEが設定されている必要があります}/.claude:/home/node/.claude
+      - ~/.ssh:/home/node/.ssh:ro
+      - ~/.gitconfig:/home/node/.gitconfig:ro
+    environment:
+      # NODE_ENV はコマンド側(nuxi dev / nuxi build)が自動で設定するため
+      # ここで強制すると build 時に dev 値が残って挙動が乱れるので設定しない
+      CLAUDE_CONFIG_DIR: /home/node/.claude
+    # VSCode devcontainer から attach するときに強制停止されないようにする
+    security_opt:
+      # Claude Code のサンドボックス (bubblewrap) が unprivileged user namespace の
+      # 作成を必要とするため、seccomp フィルタを無効化する。
+      # 外すと Claude Code の Bash 実行が全滅する（bwrap が namespace を作れない）。
+      # NOTE: seccomp 完全無効化は攻撃面を広げるため、この compose は開発専用。
+      #       本番運用する場合は override ファイルでこの設定を打ち消すこと
+      #       (主隔離境界はコンテナであり、本設定は多層防御の一層を緩めるもの)。
+      - seccomp=unconfined
+    stdin_open: true
+    tty: true
+
+volumes:
+  app-node-modules:
+  app-pnpm-store:

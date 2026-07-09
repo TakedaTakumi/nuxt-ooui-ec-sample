@@ -1,0 +1,6 @@
+minimumReleaseAge: 1440  # 1日以上経過したパッケージのみ許可
+# ライフサイクル script は既定でブロック。
+# Nuxt では esbuild 等がビルドスクリプトを必要とするため、
+# `pnpm install` 時の「Ignored build scripts」警告に出たパッケージだけを
+# 確認の上でここに明示追加する(既定ブロックの方針は崩さない)。
+onlyBuiltDependencies: []
