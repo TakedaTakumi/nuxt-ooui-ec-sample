@@ -1,6 +1,11 @@
-minimumReleaseAge: 1440  # 1日以上経過したパッケージのみ許可
-# ライフサイクル script は既定でブロック。
-# Nuxt では esbuild 等がビルドスクリプトを必要とするため、
-# `pnpm install` 時の「Ignored build scripts」警告に出たパッケージだけを
-# 確認の上でここに明示追加する(既定ブロックの方針は崩さない)。
-onlyBuiltDependencies: []
+minimumReleaseAge: 1440 # 1日以上経過したパッケージのみ許可
+# ライフサイクル script は既定でブロック(サプライチェーン対策)。
+# `pnpm install` 時の「Ignored build scripts」警告に出たパッケージのうち、
+# 動作に必要なネイティブ依存だけを確認の上で明示許可する(既定ブロックの方針は崩さない)。
+# - esbuild: Vite/Nitro のビルドに必須(postinstall でバイナリ配置)
+# - @parcel/watcher: Nuxt dev のファイル監視(ネイティブモジュール)
+# - unrs-resolver: @nuxt/eslint の import 解決(ネイティブモジュール)
+allowBuilds:
+  "@parcel/watcher": true
+  esbuild: true
+  unrs-resolver: true
