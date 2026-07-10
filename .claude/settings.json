@@ -1,0 +1,57 @@
+{
+  "allowManagedPermissionRulesOnly": true,
+  "permissions": {
+    "allow": ["Read", "Grep", "Glob"],
+    "deny": [
+      "Bash(rm -rf ~/*)",
+      "Bash(curl*)",
+      "Bash(wget *)",
+      "Bash(git push *)",
+      "Bash(chmod 777 *)",
+      "Bash(sudo *)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/.envrc)",
+      "Read(**/.secrets/**)",
+      "Read(**/.credentials.json)",
+      "Read(**.*.pem)",
+      "Read(**.*.key)"
+    ],
+    "ask": [
+      "Bash(gh api -X POST *)",
+      "Bash(gh api --method POST *)",
+      "Bash(gh pr comment *)",
+      "Bash(gh pr review *)",
+      "Bash(gh issue comment *)"
+    ]
+  },
+  "sandbox": {
+    "enabled": true,
+    "enableWeakerNestedSandbox": true,
+    "allowUnsandboxedCommands": false,
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh/**",
+        "~/.aws/**",
+        "~/.claude/**",
+        "**/.env",
+        "**/.env.*",
+        "**/.envrc",
+        "**/.secrets/**",
+        "**/.credentials.json",
+        "**/*.pem",
+        "**/*.key"
+      ],
+      "allowWrite": [
+        "/tmp/**",
+        "./**",
+        "~/.local/share/pnpm/**"
+      ]
+    },
+    "allowedDomains": [
+      "registry.npmjs.org",
+      "github.com",
+      "*.githubusercontent.com"
+    ]
+  }
+}
