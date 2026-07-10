@@ -1,0 +1,8 @@
+node_modules
+.nuxt
+.output
+dist
+.env
+.env.*
+# @nuxt/test-utils がテスト実行時に自動生成するマーカー(ローカル状態のため追跡しない)
+.nuxtrc
